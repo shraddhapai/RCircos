@@ -41,7 +41,7 @@ RCircos.Initialize.Plot.Parameters <- function(tracks.inside=NULL,
     if(tracks.inside < 0 ||tracks.outside < 0) 
     { stop("tracks.inside and tracks.outside cannot be negative.\n");}
 
-    radius.default        <- 1.0;
+    radius.default        <- 1;
     tracks.inside.default <- 4;
     track.thick.default   <- 0.12;
     plot.radius.default   <- 1.8;
