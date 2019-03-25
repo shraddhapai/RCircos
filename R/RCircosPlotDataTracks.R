@@ -609,6 +609,7 @@ RCircos.Line.Plot <- function(line.data=NULL, data.col=4, track.num=NULL,
 #                       genomic position in each row. Must be either 3 or 2.   
 #       is.sorted:      Logic, whether the data is sorted by chromosome names
 #                       and start position
+#				point.colors:		Column with colours for points. Colours to apply to individual data points.Vector of size nrow(scatter.data).
 #
 #   Return value:   None
 #
@@ -620,7 +621,8 @@ RCircos.Line.Plot <- function(line.data=NULL, data.col=4, track.num=NULL,
 RCircos.Scatter.Plot <- function(scatter.data=NULL, data.col=4, 
         track.num=NULL, side=c("in", "out"), by.fold=0, 
         min.value=NULL, max.value=NULL, inside.pos=NULL, 
-        outside.pos=NULL, genomic.columns=3, is.sorted=TRUE)
+        outside.pos=NULL, genomic.columns=3, is.sorted=TRUE,
+				point.colors=NULL)
 {
     if(is.null(scatter.data)) 
         stop("Genomic data missing in RCircos.Scatter.Plot().\n");
@@ -648,6 +650,7 @@ RCircos.Scatter.Plot <- function(scatter.data=NULL, data.col=4,
 
     #   scatter colors 
     #   =====================================================
+		if (is.null(point.colors)) {
     if(by.fold>0) {
         scatter.colors <- rep("black", nrow(scatter.data));
         red.rows <- which(scatter.values>by.fold);
@@ -659,6 +662,10 @@ RCircos.Scatter.Plot <- function(scatter.data=NULL, data.col=4,
         scatter.colors <- RCircos.Get.Plot.Colors(scatter.data, 
                             RCircos.Par$scatter.color);
     }
+		} else {
+			cat("point colours assigned\n")
+			scatter.colors <- scatter.data[,point.colors]
+		}
     
     if(is.null(max.value) || is.null(min.value))
     { 
@@ -680,7 +687,7 @@ RCircos.Scatter.Plot <- function(scatter.data=NULL, data.col=4,
         points(RCircos.Pos[the.point ,1]*plot.height[a.point], 
                 RCircos.Pos[the.point ,2]*plot.height[a.point],
                 col=scatter.colors[a.point], pch=RCircos.Par$point.type, 
-                cex=RCircos.Par$point.size);
+                cex=RCircos.Par$point.size)
     }
 }
 
@@ -1145,7 +1152,8 @@ RCircos.Track.Outline <- function(inside.pos=NULL, outside.pos=NULL,
                         RCircos.Pos[plot.end:plot.start, 1]*inside.pos);
         polygon.y<- c(RCircos.Pos[plot.start:plot.end,2]*outside.pos, 
                         RCircos.Pos[plot.end:plot.start,2]*inside.pos);
-        polygon(polygon.x, polygon.y, col=track.colors[aChr]);
+        polygon(polygon.x, polygon.y, col=track.colors[aChr],
+					border="grey80");
 
         if(num.layers>1) {
             for(a.line in seq_len(num.layers-1))
@@ -1775,7 +1783,9 @@ RCircos.Adjust.Scatter.Values <- function(scatter.values=NULL, min.value=NULL,
     plot.range <- track.height - subtrack.height;
     value.range <- max.value - min.value; 
 
-    scatter.values <- (scatter.values - min.value)/value.range;
+		if (value.range > .Machine$double.eps) {
+			scatter.values <- (scatter.values - min.value)/value.range;
+		}
     scatter.values <- scatter.values*plot.range + subtrack.height/2;
     
     return (scatter.values);
