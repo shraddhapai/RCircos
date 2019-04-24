@@ -512,7 +512,8 @@ RCircos.Histogram.Plot <- function(hist.data=NULL, data.col=4,
 
 RCircos.Line.Plot <- function(line.data=NULL, data.col=4, track.num=NULL, 
         side=c("in", "out"), min.value=NULL, max.value=NULL, 
-        inside.pos=NULL, outside.pos=NULL, genomic.columns=3,is.sorted=TRUE)
+        inside.pos=NULL, outside.pos=NULL, genomic.columns=3,is.sorted=TRUE,
+        lwd=1)
 {
     if(is.null(line.data)) 
         stop("Genomic data missing in RCircos.Line.Plot().\n");
@@ -574,7 +575,7 @@ RCircos.Line.Plot <- function(line.data=NULL, data.col=4, track.num=NULL,
                 RCircos.Pos[point.two , 1]*pointHeight[aPoint+1]),
               c(RCircos.Pos[point.one , 2]*pointHeight[aPoint],
                 RCircos.Pos[point.two , 2]*pointHeight[aPoint+1]),
-                col=line.colors[aPoint]);
+                col=line.colors[aPoint], lwd=lwd);
     }
 }
 
@@ -1192,6 +1193,8 @@ RCircos.Track.Outline <- function(inside.pos=NULL, outside.pos=NULL,
 #                       genomic position in each row. Must be 3.   
 #       is.sorted:      Logic, whether the data is sorted by chromosome names
 #                       and start position
+#       line_col:       Color of lines drawn, if null RCircos.Par$line.color 
+#                       is used
 #
 #   Return value:   None
 #   Example:        data(RCircos.Line.Data);
@@ -1204,7 +1207,7 @@ RCircos.Track.Outline <- function(inside.pos=NULL, outside.pos=NULL,
 
 RCircos.Vertical.Line.Plot <- function(line.data=NULL, track.num=NULL, 
         side=c("in", "out"), line.width=1, inside.pos=NULL, outside.pos=NULL,
-        genomic.columns=3, is.sorted=TRUE)
+        genomic.columns=3, is.sorted=TRUE, line_col=NULL)
 {
     if(is.null(line.data)) 
         stop("Genomic data missing in RCircos.Vertical.Line.Plot.\n");
@@ -1225,7 +1228,12 @@ RCircos.Vertical.Line.Plot <- function(line.data=NULL, track.num=NULL,
     
     RCircos.Pos <- RCircos.Get.Plot.Positions();
     RCircos.Par <- RCircos.Get.Plot.Parameters();
-    line.colors <- RCircos.Get.Plot.Colors(line.data, RCircos.Par$line.color);
+    if(is.null(line_col)){
+        line.colors <- RCircos.Get.Plot.Colors(line.data, RCircos.Par$line.color);
+        } else {
+            line.colors <- RCircos.Get.Plot.Colors(line.data, line_col);
+        }
+    
 
     for(a.point in seq_len((nrow(line.data))))
     {
