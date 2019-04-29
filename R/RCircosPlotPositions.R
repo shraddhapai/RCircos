@@ -183,8 +183,10 @@ RCircos.Get.Track.Positions<-function(side=NULL, track.num=NULL)
         { stop("Incorrect track location.\n"); }
 
     } else if(side == "out") {
-        inPos  <- RCircos.Par$track.out.start +(track.num-1)*oneTrack;
+        inPos  <- (RCircos.Par$track.out.start-0.26) +(track.num-1)*oneTrack;
         outPos <- inPos + RCircos.Par$track.height;
+cat(sprintf("Track %i (out.start = %1.2f); %1.2f ; %1.2f\n",
+		track.num, RCircos.Par$track.out.start,inPos,outPos))
     
         RCircos.Par <- RCircos.Get.Plot.Parameters();
         if(outPos > RCircos.Par$plot.radius) 
@@ -198,9 +200,6 @@ RCircos.Get.Track.Positions<-function(side=NULL, track.num=NULL)
     #
     return (locations=c(out.pos=outPos, in.pos=inPos));
 }
-
-
-
 
 #   =========================================================================
 #
