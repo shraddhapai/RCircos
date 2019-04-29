@@ -623,11 +623,9 @@ RCircos.Scatter.Plot <- function(scatter.data=NULL, data.col=4,
         track.num=NULL, side=c("in", "out"), by.fold=0, 
         min.value=NULL, max.value=NULL, inside.pos=NULL, 
         outside.pos=NULL, genomic.columns=3, is.sorted=TRUE,
-				point.colors=NULL)
-{
+				point.colors=NULL) {
     if(is.null(scatter.data)) 
         stop("Genomic data missing in RCircos.Scatter.Plot().\n");
-
     if(is.null(genomic.columns)) 
         stop("Missing number of columns for genomic position.\n");
     if( is.null(data.col) || data.col <= genomic.columns)  
